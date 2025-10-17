@@ -1,198 +1,291 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Markdown Preview - input.md</title>
-
-  <!-- Marked (latest) -->
-  <script src="https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js"></script>
-
-  <!-- Highlight.js (latest) and a theme -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@latest/styles/github.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/highlight.js@latest/build/highlight.min.js"></script>
-
-  <style>
-    :root{
-      --bg:#f7f9fb;
-      --card:#ffffff;
-      --text:#0f1724;
-      --muted:#475569;
-      --accent:#0366d6;
-    }
-    html,body{
-      height:100%;
-      margin:0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background:linear-gradient(180deg,var(--bg),#ffffff);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
-    .wrap{
-      max-width:900px;
-      margin:36px auto;
-      padding:20px;
-    }
-    header{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:18px;
-    }
-    .logo{
-      width:48px;
-      height:48px;
-      border-radius:8px;
-      background:linear-gradient(135deg,var(--accent),#0047b3);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:white;
-      font-weight:700;
-      font-size:20px;
-      box-shadow:0 6px 18px rgba(3,102,214,0.18);
-    }
-    h1{
-      font-size:20px;
-      margin:0;
-    }
-    p.lead{
-      margin:6px 0 0 0;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .card{
-      background:var(--card);
-      border-radius:12px;
-      box-shadow:0 6px 18px rgba(9,30,66,0.06);
-      padding:28px;
-      min-height:220px;
-    }
-    #markdown-output{
-      max-width:100%;
-      font-size:16px;
-      line-height:1.65;
-    }
-    #markdown-output h1,#markdown-output h2,#markdown-output h3{
-      margin-top:1.2em;
-      margin-bottom:.4em;
-      line-height:1.2;
-    }
-    #markdown-output p{
-      margin:.6em 0;
-    }
-    #markdown-output pre{
-      background:#0b1220;
-      color:#e6eef6;
-      padding:12px;
-      border-radius:8px;
-      overflow:auto;
-      font-size:13px;
-      line-height:1.45;
-    }
-    #markdown-output code{
-      background:rgba(27,31,35,0.06);
-      padding:.2em .4em;
-      border-radius:6px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "Courier New", monospace;
-      font-size:13px;
-    }
-    a { color:var(--accent); text-decoration: none; }
-    a:hover { text-decoration:underline; }
-    .meta{
-      margin-top:12px;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .error{
-      color:#9b1c1c;
-      background:#fff0f0;
-      padding:10px;
-      border-radius:8px;
-      border:1px solid rgba(155,28,28,0.08);
-    }
-    @media (max-width:640px){
-      .wrap{ padding:14px; margin:18px; }
-      .card{ padding:18px; }
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Markdown Preview - input.md</title>
+<!-- Marked (latest) -->
+<script src="https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js"></script>
+<!-- Highlight.js (latest) and a theme -->
+<link href="https://cdn.jsdelivr.net/npm/highlight.js@latest/styles/github.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@latest/build/highlight.min.js"></script>
+<style>
+ :root{
+     --bg:#f7f9fb;
+     --card:#ffffff;
+     --text:#0f1724;
+     --muted:#475569;
+     --accent:#0366d6;
+   }
+   html,body{
+     height:100%;
+     margin:0;
+     font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+     background:linear-gradient(180deg,var(--bg),#ffffff);
+     color:var(--text);
+     -webkit-font-smoothing:antialiased;
+     -moz-osx-font-smoothing:grayscale;
+   }
+   .wrap{
+     max-width:900px;
+     margin:36px auto;
+     padding:20px;
+   }
+   header{
+     display:flex;
+     align-items:center;
+     gap:12px;
+     margin-bottom:18px;
+   }
+   .logo{
+     width:48px;
+     height:48px;
+     border-radius:8px;
+     background:linear-gradient(135deg,var(--accent),#0047b3);
+     display:flex;
+     align-items:center;
+     justify-content:center;
+     color:white;
+     font-weight:700;
+     font-size:20px;
+     box-shadow:0 6px 18px rgba(3,102,214,0.18);
+   }
+   h1{
+     font-size:20px;
+     margin:0;
+   }
+   p.lead{
+     margin:6px 0 0 0;
+     color:var(--muted);
+     font-size:13px;
+   }
+   .card{
+     background:var(--card);
+     border-radius:12px;
+     box-shadow:0 6px 18px rgba(9,30,66,0.06);
+     padding:28px;
+     min-height:220px;
+   }
+   #markdown-output{
+     max-width:100%;
+     font-size:16px;
+     line-height:1.65;
+   }
+   #markdown-output h1,#markdown-output h2,#markdown-output h3{
+     margin-top:1.2em;
+     margin-bottom:.4em;
+     line-height:1.2;
+   }
+   #markdown-output p{
+     margin:.6em 0;
+   }
+   #markdown-output pre{
+     background:#0b1220;
+     color:#e6eef6;
+     padding:12px;
+     border-radius:8px;
+     overflow:auto;
+     font-size:13px;
+     line-height:1.45;
+   }
+   #markdown-output code{
+     background:rgba(27,31,35,0.06);
+     padding:.2em .4em;
+     border-radius:6px;
+     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "Courier New", monospace;
+     font-size:13px;
+   }
+   pre#markdown-source{
+     background:#f6f8fa;
+     border:1px solid #e5e7eb;
+     border-radius:8px;
+     padding:0;
+     margin:0;
+     overflow:auto;
+     max-height: 60vh;
+   }
+   #markdown-source code{
+     display:block;
+     white-space:pre-wrap;
+     padding:14px 16px;
+     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "Courier New", monospace;
+     font-size:13px;
+     line-height:1.6;
+     color:#111827;
+   }
+   a { color:var(--accent); text-decoration: none; }
+   a:hover { text-decoration:underline; }
+   .meta{
+     margin-top:12px;
+     color:var(--muted);
+     font-size:13px;
+   }
+   .error{
+     color:#9b1c1c;
+     background:#fff0f0;
+     padding:10px;
+     border-radius:8px;
+     border:1px solid rgba(155,28,28,0.08);
+   }
+   /* Tabs styling */
+   #markdown-tabs{
+     display:flex;
+     gap:6px;
+     align-items:center;
+     margin-bottom:12px;
+     border-bottom:1px solid #e6e9ef;
+   }
+   #markdown-tabs button{
+     background: transparent;
+     border:0;
+     padding:10px 14px;
+     font-weight:600;
+     color:var(--muted);
+     cursor:pointer;
+     border-bottom:2px solid transparent;
+     border-radius:6px 6px 0 0;
+   }
+   #markdown-tabs button.active{
+     color:var(--text);
+     background:#fff;
+     border-bottom:2px solid var(--accent);
+   }
+   @media (max-width:640px){
+     .wrap{ padding:14px; margin:18px; }
+     .card{ padding:18px; }
+   }
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo">MD</div>
-      <div>
-        <h1>input.md — Rendered</h1>
-        <p class="lead">Automatically fetched from the same directory and converted to HTML with marked. Code blocks are highlighted with highlight.js.</p>
-      </div>
-    </header>
+<div class="wrap">
+  <header>
+    <div class="logo" aria-label="Logo">MD</div>
+    <div>
+      <h1>Markdown Preview - input.md</h1>
+      <p class="lead">Static page that loads input.md from attachments and renders HTML with marked. Code blocks are highlighted with highlight.js. Use the tabs to switch between rendered HTML and the original Markdown.</p>
+    </div>
+  </header>
 
-    <main class="card" aria-live="polite">
-      <div id="markdown-output">Loading input.md…</div>
-      <div class="meta">File: <code>input.md</code></div>
-    </main>
+  <div class="card" aria-label="Markdown viewer">
+    <!-- Tabs -->
+    <div id="markdown-tabs" aria-label="Markdown view tabs">
+      <button id="tab-render" class="active" aria-selected="true" data-panel="rendered">Rendered</button>
+      <button id="tab-source" aria-selected="false" data-panel="source">Markdown</button>
+      <button id="tab-refresh" style="margin-left:auto" aria-label="Reload attachments">Reload</button>
+    </div>
+
+    <!-- Rendered HTML output panel -->
+    <div id="markdown-output" class="panel" style="display:block;">
+      <!-- Rendered HTML will be injected here -->
+    </div>
+
+    <!-- Original Markdown panel (hidden by default) -->
+    <pre id="markdown-source" class="panel" style="display:none;">
+      <code id="markdown-source-code" aria-label="Original Markdown"></code>
+    </pre>
+
+    <div class="meta" id="status" aria-live="polite" style="margin-top:12px;">
+      Loading input.md…
+    </div>
   </div>
+</div>
 
-  <script>
-    (async function(){
-      // Ensure highlight.js is configured (optional)
-      if (window.hljs && typeof hljs.initHighlightingOnLoad === 'function') {
-        try { hljs.initHighlightingOnLoad(); } catch (e) { /* ignore if not supported */ }
-      }
+<!-- Inline scripts: load data from attachments and manage tabs -->
+<script>
+  // Initialize libraries
+  // Ensure hljs highlights after content is injected
+  if (typeof hljs !== 'undefined') {
+    // hljs will be configured after rendering
+  }
 
-      const out = document.getElementById('markdown-output');
-
-      async function fetchAndRender(filename = 'input.md') {
+  // Make sure marked uses highlight.js for code blocks
+  if (typeof marked !== 'undefined' && marked.parse) {
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      headerIds: true,
+      // highlight each code block
+      highlight: function(code, lang) {
         try {
-          const resp = await fetch(filename, {cache: "no-store"});
-          if (!resp.ok) throw new Error('Could not fetch "' + filename + '" — status ' + resp.status);
-          const md = await resp.text();
-
-          // Configure marked to use highlight.js for code blocks
-          if (window.marked) {
-            marked.setOptions({
-              gfm: true,
-              breaks: false,
-              headerIds: true,
-              mangle: false,
-              // Use highlight.js to highlight code blocks
-              highlight: function(code, lang) {
-                try {
-                  if (lang && hljs.getLanguage && hljs.getLanguage(lang)) {
-                    return hljs.highlight(code, { language: lang }).value;
-                  } else if (hljs.highlightAuto) {
-                    return hljs.highlightAuto(code).value;
-                  }
-                } catch (err) {
-                  // fallback: return raw code escaped by marked later
-                }
-                return code;
-              }
-            });
-
-            // Convert markdown to HTML
-            const html = marked.parse(md || '');
-            out.innerHTML = html;
-
-            // Apply highlight.js to any code elements (extra safety)
-            if (window.hljs && typeof hljs.highlightElement === 'function') {
-              document.querySelectorAll('#markdown-output pre code').forEach((block) => {
-                try { hljs.highlightElement(block); } catch(e) { /* ignore */ }
-              });
-            }
-          } else {
-            out.textContent = 'Error: marked library not available.';
-          }
-        } catch (err) {
-          out.innerHTML = '<div class="error">Error loading file: ' + String(err) + '</div>';
-          console.error(err);
+          return hljs && typeof hljs.highlightAuto === 'function'
+            ? hljs.highlightAuto(code).value
+            : (lang && hljs.getLanguage(lang) ? hljs.highlight(code, { language: lang }).value : code);
+        } catch (e) {
+          return code;
         }
       }
+    });
+  }
 
-      // On load, fetch and render input.md located in same directory
-      await fetchAndRender('input.md');
-    })();
-  </script>
+  const outputEl = document.getElementById('markdown-output');
+  const sourcePane = document.getElementById('markdown-source');
+  const sourceCodeEl = document.getElementById('markdown-source-code');
+  const tabRender = document.getElementById('tab-render');
+  const tabSource = document.getElementById('tab-source');
+  const statusEl = document.getElementById('status');
+  const reloadBtn = document.getElementById('tab-refresh');
+
+  function showPanel(which) {
+    if (which === 'rendered') {
+      outputEl.style.display = 'block';
+      sourcePane.style.display = 'none';
+      tabRender.classList.add('active');
+      tabSource.classList.remove('active');
+    } else if (which === 'source') {
+      outputEl.style.display = 'none';
+      sourcePane.style.display = 'block';
+      tabRender.classList.remove('active');
+      tabSource.classList.add('active');
+    }
+  }
+
+  // Sync: fetch input.md from attachments and render both views
+  let cachedMarkdown = '';
+
+  async function loadAttachments() {
+    statusEl.textContent = 'Loading input.md…';
+    try {
+      const res = await fetch('input.md');
+      if (!res.ok) throw new Error('Network response was not ok');
+      const md = await res.text();
+      cachedMarkdown = md;
+
+      // Render to HTML
+      if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+        outputEl.innerHTML = marked.parse(md);
+        // Re-run highlight.js for code blocks
+        if (typeof hljs !== 'undefined' && hljs.highlightAll) {
+          hljs.highlightAll();
+        }
+      } else {
+        outputEl.innerHTML = '<div class="error">Marked library not loaded.</div>';
+      }
+
+      // Put original Markdown into the source panel
+      sourceCodeEl.textContent = md;
+      // Ensure the code block reflows with proper styling
+      // If the pre is visible later, it will display correctly
+      statusEl.textContent = 'Loaded input.md';
+    } catch (err) {
+      outputEl.innerHTML = `<div class="error">Error loading input.md: ${err.message}</div>`;
+      statusEl.textContent = 'Error loading input.md';
+    }
+  }
+
+  // Event listeners for tabs and reload
+  tabRender.addEventListener('click', function() { showPanel('rendered'); });
+  tabSource.addEventListener('click', function() { showPanel('source'); });
+
+  reloadBtn.addEventListener('click', function() {
+    loadAttachments();
+  });
+
+  // Initial load
+  document.addEventListener('DOMContentLoaded', function() {
+    // Default to rendered view
+    showPanel('rendered');
+    loadAttachments();
+  });
+</script>
 </body>
 </html>
