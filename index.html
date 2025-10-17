@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Markdown Preview - input.md</title>
+
+  <!-- Marked (latest) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js"></script>
+
+  <!-- Highlight.js (latest) and a theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@latest/styles/github.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@latest/build/highlight.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f7f9fb;
+      --card:#ffffff;
+      --text:#0f1724;
+      --muted:#475569;
+      --accent:#0366d6;
+    }
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:linear-gradient(180deg,var(--bg),#ffffff);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .wrap{
+      max-width:900px;
+      margin:36px auto;
+      padding:20px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:48px;
+      height:48px;
+      border-radius:8px;
+      background:linear-gradient(135deg,var(--accent),#0047b3);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:white;
+      font-weight:700;
+      font-size:20px;
+      box-shadow:0 6px 18px rgba(3,102,214,0.18);
+    }
+    h1{
+      font-size:20px;
+      margin:0;
+    }
+    p.lead{
+      margin:6px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(9,30,66,0.06);
+      padding:28px;
+      min-height:220px;
+    }
+    #markdown-output{
+      max-width:100%;
+      font-size:16px;
+      line-height:1.65;
+    }
+    #markdown-output h1,#markdown-output h2,#markdown-output h3{
+      margin-top:1.2em;
+      margin-bottom:.4em;
+      line-height:1.2;
+    }
+    #markdown-output p{
+      margin:.6em 0;
+    }
+    #markdown-output pre{
+      background:#0b1220;
+      color:#e6eef6;
+      padding:12px;
+      border-radius:8px;
+      overflow:auto;
+      font-size:13px;
+      line-height:1.45;
+    }
+    #markdown-output code{
+      background:rgba(27,31,35,0.06);
+      padding:.2em .4em;
+      border-radius:6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Segoe UI Mono", "Courier New", monospace;
+      font-size:13px;
+    }
+    a { color:var(--accent); text-decoration: none; }
+    a:hover { text-decoration:underline; }
+    .meta{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .error{
+      color:#9b1c1c;
+      background:#fff0f0;
+      padding:10px;
+      border-radius:8px;
+      border:1px solid rgba(155,28,28,0.08);
+    }
+    @media (max-width:640px){
+      .wrap{ padding:14px; margin:18px; }
+      .card{ padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">MD</div>
+      <div>
+        <h1>input.md — Rendered</h1>
+        <p class="lead">Automatically fetched from the same directory and converted to HTML with marked. Code blocks are highlighted with highlight.js.</p>
+      </div>
+    </header>
+
+    <main class="card" aria-live="polite">
+      <div id="markdown-output">Loading input.md…</div>
+      <div class="meta">File: <code>input.md</code></div>
+    </main>
+  </div>
+
+  <script>
+    (async function(){
+      // Ensure highlight.js is configured (optional)
+      if (window.hljs && typeof hljs.initHighlightingOnLoad === 'function') {
+        try { hljs.initHighlightingOnLoad(); } catch (e) { /* ignore if not supported */ }
+      }
+
+      const out = document.getElementById('markdown-output');
+
+      async function fetchAndRender(filename = 'input.md') {
+        try {
+          const resp = await fetch(filename, {cache: "no-store"});
+          if (!resp.ok) throw new Error('Could not fetch "' + filename + '" — status ' + resp.status);
+          const md = await resp.text();
+
+          // Configure marked to use highlight.js for code blocks
+          if (window.marked) {
+            marked.setOptions({
+              gfm: true,
+              breaks: false,
+              headerIds: true,
+              mangle: false,
+              // Use highlight.js to highlight code blocks
+              highlight: function(code, lang) {
+                try {
+                  if (lang && hljs.getLanguage && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
+                  } else if (hljs.highlightAuto) {
+                    return hljs.highlightAuto(code).value;
+                  }
+                } catch (err) {
+                  // fallback: return raw code escaped by marked later
+                }
+                return code;
+              }
+            });
+
+            // Convert markdown to HTML
+            const html = marked.parse(md || '');
+            out.innerHTML = html;
+
+            // Apply highlight.js to any code elements (extra safety)
+            if (window.hljs && typeof hljs.highlightElement === 'function') {
+              document.querySelectorAll('#markdown-output pre code').forEach((block) => {
+                try { hljs.highlightElement(block); } catch(e) { /* ignore */ }
+              });
+            }
+          } else {
+            out.textContent = 'Error: marked library not available.';
+          }
+        } catch (err) {
+          out.innerHTML = '<div class="error">Error loading file: ' + String(err) + '</div>';
+          console.error(err);
+        }
+      }
+
+      // On load, fetch and render input.md located in same directory
+      await fetchAndRender('input.md');
+    })();
+  </script>
+</body>
+</html>
