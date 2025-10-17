@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Markdown Preview - input.md</title>
-<!-- Marked (latest) -->
-<script src="https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js"></script>
-<!-- Highlight.js (latest) and a theme -->
-<link href="https://cdn.jsdelivr.net/npm/highlight.js@latest/styles/github.min.css" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/highlight.js@latest/build/highlight.min.js"></script>
-<style>
- :root{
+ <meta charset="utf-8"/>
+ <meta content="width=device-width,initial-scale=1" name="viewport"/>
+ <title>Markdown Preview - input.md</title>
+ <!-- Marked (latest) -->
+ <script src="https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js"></script>
+ <!-- Highlight.js (latest) and a theme -->
+ <link href="https://cdn.jsdelivr.net/npm/highlight.js@latest/styles/github.min.css" rel="stylesheet"/>
+ <script src="https://cdn.jsdelivr.net/npm/highlight.js@latest/build/highlight.min.js"></script>
+ <style>
+  :root{
      --bg:#f7f9fb;
      --card:#ffffff;
      --text:#0f1724;
@@ -33,7 +33,8 @@
    }
    header{
      display:flex;
-     align-items:center;
+     align-items:flex-start;
+     justify-content:space-between;
      gap:12px;
      margin-bottom:18px;
    }
@@ -150,142 +151,148 @@
      background:#fff;
      border-bottom:2px solid var(--accent);
    }
+   /* Word count badge styling */
+   #markdown-word-count{
+     display:inline-block;
+     padding:2px 8px;
+     border-radius:999px;
+     background:#fff;
+     border:1px solid #e5e7eb;
+     font-weight:600;
+     margin-left:6px;
+   }
    @media (max-width:640px){
      .wrap{ padding:14px; margin:18px; }
      .card{ padding:18px; }
+     header{ flex-direction:column; align-items:flex-start; }
    }
-</style>
+ </style>
 </head>
 <body>
-<div class="wrap">
+ <div class="wrap">
   <header>
-    <div class="logo" aria-label="Logo">MD</div>
-    <div>
-      <h1>Markdown Preview - input.md</h1>
-      <p class="lead">Static page that loads input.md from attachments and renders HTML with marked. Code blocks are highlighted with highlight.js. Use the tabs to switch between rendered HTML and the original Markdown.</p>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div class="logo" aria-label="Logo">MD</div>
+      <div>
+        <h1>Markdown Preview - input.md</h1>
+        <p class="lead">Convert input.md to HTML using marked and highlight.js for code blocks.</p>
+      </div>
+    </div>
+    <div style="min-width:140px; text-align:right;">
+      Word count:&nbsp;<span id="markdown-word-count" aria-label="word count">0</span>
     </div>
   </header>
 
-  <div class="card" aria-label="Markdown viewer">
-    <!-- Tabs -->
-    <div id="markdown-tabs" aria-label="Markdown view tabs">
-      <button id="tab-render" class="active" aria-selected="true" data-panel="rendered">Rendered</button>
-      <button id="tab-source" aria-selected="false" data-panel="source">Markdown</button>
-      <button id="tab-refresh" style="margin-left:auto" aria-label="Reload attachments">Reload</button>
+  <div class="card" aria-label="markdown preview card">
+    <div id="markdown-tabs" aria-label="view mode">
+      <button class="active" data-mode="preview" aria-pressed="true">Preview</button>
+      <button data-mode="source" aria-pressed="false">Source</button>
     </div>
 
-    <!-- Rendered HTML output panel -->
-    <div id="markdown-output" class="panel" style="display:block;">
-      <!-- Rendered HTML will be injected here -->
+    <div id="markdown-area" style="min-height:220px;">
+      <div id="markdown-preview" style="display:block;">
+        <div id="markdown-output"></div>
+      </div>
+
+      <pre id="markdown-source" style="display:none;">
+        <code></code>
+      </pre>
     </div>
 
-    <!-- Original Markdown panel (hidden by default) -->
-    <pre id="markdown-source" class="panel" style="display:none;">
-      <code id="markdown-source-code" aria-label="Original Markdown"></code>
-    </pre>
-
-    <div class="meta" id="status" aria-live="polite" style="margin-top:12px;">
-      Loading input.md…
+    <div class="meta" id="markdown-meta" aria-label="rendered info">
+      Rendered: <span id="markdown-rendered-at"></span>
+      <span style="margin-left:12px;">Words: <span id="markdown-word-count-2">0</span></span>
     </div>
   </div>
-</div>
+ </div>
 
-<!-- Inline scripts: load data from attachments and manage tabs -->
-<script>
-  // Initialize libraries
-  // Ensure hljs highlights after content is injected
-  if (typeof hljs !== 'undefined') {
-    // hljs will be configured after rendering
-  }
-
-  // Make sure marked uses highlight.js for code blocks
-  if (typeof marked !== 'undefined' && marked.parse) {
-    marked.setOptions({
-      breaks: true,
-      gfm: true,
-      headerIds: true,
-      // highlight each code block
-      highlight: function(code, lang) {
-        try {
-          return hljs && typeof hljs.highlightAuto === 'function'
-            ? hljs.highlightAuto(code).value
-            : (lang && hljs.getLanguage(lang) ? hljs.highlight(code, { language: lang }).value : code);
-        } catch (e) {
-          return code;
+ <script>
+  // Initialize libraries and render on load
+  document.addEventListener('DOMContentLoaded', () => {
+    // Tab switching logic
+    const tabs = document.querySelectorAll('#markdown-tabs button');
+    const previewPane = document.getElementById('markdown-preview');
+    const sourcePane = document.getElementById('markdown-source');
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const mode = btn.dataset.mode;
+        if (mode === 'preview') {
+          previewPane.style.display = '';
+          sourcePane.style.display = 'none';
+        } else {
+          previewPane.style.display = 'none';
+          sourcePane.style.display = '';
         }
-      }
+      });
     });
-  }
 
-  const outputEl = document.getElementById('markdown-output');
-  const sourcePane = document.getElementById('markdown-source');
-  const sourceCodeEl = document.getElementById('markdown-source-code');
-  const tabRender = document.getElementById('tab-render');
-  const tabSource = document.getElementById('tab-source');
-  const statusEl = document.getElementById('status');
-  const reloadBtn = document.getElementById('tab-refresh');
+    // Render the markdown initially
+    renderMarkdown();
+  });
 
-  function showPanel(which) {
-    if (which === 'rendered') {
-      outputEl.style.display = 'block';
-      sourcePane.style.display = 'none';
-      tabRender.classList.add('active');
-      tabSource.classList.remove('active');
-    } else if (which === 'source') {
-      outputEl.style.display = 'none';
-      sourcePane.style.display = 'block';
-      tabRender.classList.remove('active');
-      tabSource.classList.add('active');
-    }
-  }
-
-  // Sync: fetch input.md from attachments and render both views
-  let cachedMarkdown = '';
-
-  async function loadAttachments() {
-    statusEl.textContent = 'Loading input.md…';
+  async function renderMarkdown() {
     try {
-      const res = await fetch('input.md');
-      if (!res.ok) throw new Error('Network response was not ok');
-      const md = await res.text();
-      cachedMarkdown = md;
-
-      // Render to HTML
-      if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
-        outputEl.innerHTML = marked.parse(md);
-        // Re-run highlight.js for code blocks
-        if (typeof hljs !== 'undefined' && hljs.highlightAll) {
-          hljs.highlightAll();
+      // Fetch the attachment input.md
+      let md = '';
+      try {
+        const res = await fetch('input.md');
+        if (res.ok) {
+          md = await res.text();
+        } else {
+          md = `# Attachment not accessible\nCould not fetch input.md (status: ${res.status}).`;
         }
-      } else {
-        outputEl.innerHTML = '<div class="error">Marked library not loaded.</div>';
+      } catch (e) {
+        md = `# Attachment not accessible\nCould not fetch input.md.`;
       }
 
-      // Put original Markdown into the source panel
-      sourceCodeEl.textContent = md;
-      // Ensure the code block reflows with proper styling
-      // If the pre is visible later, it will display correctly
-      statusEl.textContent = 'Loaded input.md';
+      // Word count using Intl.NumberFormat
+      const wordCount = countWords(md);
+      const nf = new Intl.NumberFormat();
+      const wc1 = document.getElementById('markdown-word-count');
+      const wc2 = document.getElementById('markdown-word-count-2');
+      if (wc1) wc1.textContent = nf.format(wordCount);
+      if (wc2) wc2.textContent = nf.format(wordCount);
+
+      // Render markdown to HTML using marked (do not call marked() if present)
+      const html = marked.parse(md);
+      const output = document.getElementById('markdown-output');
+      output.innerHTML = html;
+
+      // Highlight code blocks
+      if (typeof hljs !== 'undefined') {
+        document.querySelectorAll('#markdown-output pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      }
+
+      // Show the source in the pre block
+      const codeBlock = document.querySelector('#markdown-source code');
+      if (codeBlock) codeBlock.textContent = md;
+
+      // Update rendered timestamp
+      const renderedAt = document.getElementById('markdown-rendered-at');
+      if (renderedAt) {
+        const now = new Date().toLocaleString();
+        renderedAt.textContent = now;
+      }
+
     } catch (err) {
-      outputEl.innerHTML = `<div class="error">Error loading input.md: ${err.message}</div>`;
-      statusEl.textContent = 'Error loading input.md';
+      const output = document.getElementById('markdown-output');
+      if (output) {
+        output.innerHTML = `<div class="error">Failed to render markdown: ${err?.message ?? err}</div>`;
+      }
     }
   }
 
-  // Event listeners for tabs and reload
-  tabRender.addEventListener('click', function() { showPanel('rendered'); });
-  tabSource.addEventListener('click', function() { showPanel('source'); });
-
-  reloadBtn.addEventListener('click', function() {
-    loadAttachments();
-  });
-
-  // Initial load
-  document.addEventListener('DOMContentLoaded', function() {
-    // Default to rendered view
-    showPanel('rendered');
-    loadAttachments();
-  });
-</script>
+  function countWords(text) {
+    const t = (text ?? '');
+    const trimmed = t.trim();
+    if (!trimmed) return 0;
+    // Count words by whitespace separation
+    return trimmed.split(/\s+/).filter(Boolean).length;
+  }
+ </script>
 </body>
 </html>

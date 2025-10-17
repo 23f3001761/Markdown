@@ -5,7 +5,7 @@
 This web application is automatically generated and updated by a large language model (LLM) based on the following detailed user-provided brief : 
 
 ```
-Add tabs #markdown-tabs that switch between rendered HTML in #markdown-output and the original Markdown in #markdown-source while keeping content in sync.
+Display a live word count badge #markdown-word-count that updates after every render and formats numbers with Intl.NumberFormat.
 
 ```
 The system analyzes the brief and produces the complete source code for a minimal, responsive, and functional single-page website, built using HTML, CSS, and JavaScript. The app may include additional assets such as images or data files necessary for its features.  
